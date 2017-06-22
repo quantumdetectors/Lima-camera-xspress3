@@ -59,3 +59,7 @@ IF(COMPILE_SIP)
     include(CameraRunSIP)
     INSTALL(FILES python/__init__.py DESTINATION "${PYTHON_SITE_PACKAGES_DIR}/Lima/Xspress3")
 ENDIF()
+
+if(COMPILE_TEST)
+	add_subdirectory(test/)
+endif()
