@@ -3,10 +3,11 @@
 Xspress3
 --------
 
-.. image:: Xspress3.png 
+.. image:: Xspress3.png
 
 Introduction
 ````````````
+
 Many solid state detectors are not limited by their intrinsic rate capability, but by the readout system connected to them.
 The Quantum Detectors Xspress 3 was developed to maximise the throughput and resolution of such detectors and remove the bottleneck
 at the readout stage. With output count rates of over 3 Mcps, this detector is easily 10X faster than the systems many users have
@@ -21,11 +22,10 @@ The Software Development Toolkit (SDK) is provided for Linux only.
 
 Prerequisite
 ````````````
-Unpack the SDK distribution into either the camera/xspress3/sdk directory or /usr/local/lib
-Then ensure the libraries are in the LD_LIBRARY_PATH
 
-The SDK has shared libraries which has been compiled on recent linux kernel. g++ (GCC) 4.1.2 20080704 (Red Hat 4.1.2-50),
- check first you have the right kernel and libc available by compiling the test program.
+Unpack the SDK distribution into either the ``camera/xspress3/sdk`` directory or ``/usr/local/lib``. Then ensure the libraries are in the ``LD_LIBRARY_PATH``.
+
+The SDK has shared libraries which has been compiled on recent linux kernel. g++ (GCC) 4.1.2 20080704 (Red Hat 4.1.2-50), check first you have the right kernel and libc available by compiling the test program.
 
 The default network setup is (excluding the site network connection):
 
@@ -35,7 +35,8 @@ A private network with 64 addresses allocated:
 
 .. code-block:: sh
 
-  ifconfig eth1
+  $ ifconfig eth1
+
   eth1     Link encap:Ethernet  HWaddr d4:ae:52:7d:5f:84
            inet addr:192.168.0.1  Bcast:192.168.0.63  Mask:255.255.255.192
            inet6 addr: fe80::d6ae:52ff:fe7d:5f84/64 Scope:Link
@@ -45,13 +46,14 @@ A private network with 64 addresses allocated:
            collisions:0 txqueuelen:1000
            RX bytes:173937 (169.8 KiB)  TX bytes:37252 (36.3 KiB)
            Interrupt:48 Memory:da000000-da012800
- 
+
 A 10GBit Fibre network for data transfer, point to point with 4 addresses allocated.
-With more that 1 XSPRESS3 box there would be multiple 10G Ports on the PC with multiple 4 address range subnets
+With more that 1 XSPRESS3 box there would be multiple 10G Ports on the PC with multiple 4 address range subnets:
 
 .. code-block:: sh
 
-  ifconfig eth2
+  $ ifconfig eth2
+
   eth2     Link encap:Ethernet  HWaddr 00:07:43:05:7c:65
            inet addr:192.168.0.65  Bcast:192.168.0.67  Mask:255.255.255.252
            inet6 addr: fe80::207:43ff:fe05:7c65/64 Scope:Link
@@ -65,9 +67,9 @@ With more that 1 XSPRESS3 box there would be multiple 10G Ports on the PC with m
 Note the carefully picked subnet masks etc and the MTU 9000
 We then have a script that should be executed automatically at boot.
 
-cat /etc/init.d/xspress3.sh
-
 .. code-block:: sh
+
+  $ cat /etc/init.d/xspress3.sh
 
   #!/bin/bash
   #
@@ -87,53 +89,44 @@ cat /etc/init.d/xspress3.sh
 Installation & Module configuration
 ````````````````````````````````````
 
--  follow first the steps for the linux installation :ref:`linux_installation`
-
-The minimum configuration file is *config.inc* :
+Follow the generic instructions in :ref:`build_installation`. If using CMake directly, add the following flag:
 
 .. code-block:: sh
 
-  COMPILE_CORE=1
-  COMPILE_SIMULATOR=0
-  COMPILE_SPS_IMAGE=1
-  COMPILE_XSPRESS3=1
-  export COMPILE_CORE COMPILE_SPS_IMAGE COMPILE_SIMULATOR COMPILE_XSPRESS3
+ -DLIMACAMERA_XSPRESS3=true
 
--  start the compilation :ref:`linux_compilation`
-
--  finally for the Tango server installation :ref:`tango_installation`
+For the Tango server installation, refers to :ref:`tango_installation`.
 
 Initialisation and Capabilities
-````````````````````````````````
+```````````````````````````````
+
 In order to help people to understand how the camera plugin has been implemented in LImA this section
 provide some important information about the developer's choices.
 
 Camera initialisation
-......................
+.....................
 
-The camera will be initialized within the Xspress3Camera object. A TCP socket connection on the 1GBit port is established and
-optionally a UDP connection on the 10Gbit port (depends on boolean constructor flag noUDP). The ROI's are reset, the first
-card in a multicard system or the single card, is set to be the master and the run flags are set to initiate Scaler and Histogram modes.
-The register and configuration settings (as optimised by QD on delivery) are uploaded to the Xspress3.
+The camera will be initialized within the :cpp:class:`Xspress3::Camera` object. A TCP socket connection on the 1GBit port is established and optionally a UDP connection on the 10Gbit port (depends on boolean constructor flag noUDP). The ROI's are reset, the first card in a multicard system or the single card, is set to be the master and the run flags are set to initiate Scaler and Histogram modes. The register and configuration settings (as optimised by QD on delivery) are uploaded to the Xspress3.
 
-The Xspress3 requires the following parameters with the recommended settings.
-nbCards           = 1 (number of Xspress3 boxes)
-maxFrames         = 16384
-baseIPaddress     = "192.168.0.1"
-basePort          = 30123
-baseMACaddress    = "02.00.00.00.00.00"
-nbChans           = 4/6/8 (depends on the firmware)
-createScopeModule = true/false
-scopeModuleName   = "a-name-of-your-choice"
-debug             = 0 is off, 1 is on, 2 is verbose
-cardIndex         = 0 (for a 1 xspress system)
-noUDP             = true/false
-directoryName     = "directory containing xspress3 configuration settings"
+The Xspress3 requires the following parameters with the recommended settings::
 
-The Xspress3Camera contructor sets the camera with default parameters for Number of Pixels (4096), the imageType (Bpp32),
+  nbCards           = 1 (number of Xspress3 boxes)
+  maxFrames         = 16384
+  baseIPaddress     = "192.168.0.1"
+  basePort          = 30123
+  baseMACaddress    = "02.00.00.00.00.00"
+  nbChans           = 4/6/8 (depends on the firmware)
+  createScopeModule = true/false
+  scopeModuleName   = "a-name-of-your-choice"
+  debug             = 0 is off, 1 is on, 2 is verbose
+  cardIndex         = 0 (for a 1 xspress system)
+  noUDP             = true/false
+  directoryName     = "directory containing xspress3 configuration settings"
+
+The :cpp:class:`Xspress3::Camera` contructor sets the camera with default parameters for Number of Pixels (4096), the imageType (Bpp32),
 Number of Frames (1) and the trigger mode (IntTrig)
 
-Std capabilites
+Std capabilities
 ................
 
 This plugin has been implemented with respect of the mandatory capabilites but with some limitations which
@@ -141,21 +134,20 @@ are due to the camera and SDK features.  We only provide here extra information 
 of the capabilities for Xspress3 cameras.
 
 * HwDetInfo
-  
-  getCurrImageType/getDefImageType(): is set to Bpp32
-  setCurrImageType(): will not change the image type.
-  getMaxImageSize/getDetectorImageSize(): is defined as number of pixels + number of scalers x number of channels. 
-  i.e. (4096+8) x 4 for a 4 channel xspress3 system
-  getPixelSize(): is hardcoded to be 1x1
-  getDetectorModel(): reads and reports the xspress3 firmware version.
+
+  - getCurrImageType/getDefImageType(): is set to Bpp32
+  - setCurrImageType(): will not change the image type.
+  - getMaxImageSize/getDetectorImageSize(): is defined as number of pixels + number of scalers x number of channels, i.e. (4096+8) x 4 for a 4 channel xspress3 system
+  - getPixelSize(): is hardcoded to be 1x1
+  - getDetectorModel(): reads and reports the xspress3 firmware version.
 
 * HwSync
 
   get/setTrigMode(): the only supported modes are IntTrig, ExtGate and IntTrigMult
-  
 
 Optional capabilities
-........................
+......................
+
 None
 
 Data Format
@@ -172,10 +164,10 @@ histogram and scaler data, the latter is appended to the histogram data.
     [2] [0 ... 4095, 4096 ... 5003]               channel 2
     [3] [0 ... 4095, 4096 ... 5003]               channel 3
 
-Camera::readScalers(): returns the raw scaler data from the Lima buffers from the specified frame and channel
-Camera::readHistogram(): returns the raw histogram data from the Lima buffers from the specified frame and channel
-setUseDtc/getUseDtc(): set to true will dead time correct the data returned from the Lima buffers (default is false)
-setUseHW/getUseHw(): set to true will return raw histogram data from the H/W data buffers, including the current frame.
+- :cpp:func:`Camera::readScalers()`: returns the raw scaler data from the Lima buffers from the specified frame and channel
+- :cpp:func:`Camera::readHistogram()`: returns the raw histogram data from the Lima buffers from the specified frame and channel
+- :cpp:func:`Camera::setUseDtc()` and :cpp:func:`Camera::getUseDtc()`: set to true will dead time correct the data returned from the Lima buffers (default is false)
+- :cpp:func:`Camera::setUseHW()` and :cpp:func:`Camera::getUseHw()`: set to true will return raw histogram data from the H/W data buffers, including the current frame.
 
 How to use
 ````````````
