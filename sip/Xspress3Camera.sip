@@ -194,6 +194,8 @@ namespace Xspress3
 	void setDataSource(int chan, DataSrc data_src=Normal);
 //	void setItfgTiming(int nframes, ItfgTriggerMode triggerMode, ItfgGapMode gapMode);
 	void setItfgTiming(int nframes, int triggerMode, int gapMode);
+
+  private:
+	Camera(const Xspress3::Camera&);
   };
 };
-
