@@ -37,7 +37,7 @@ typedef int32_t   int32;
 typedef int16_t   int16;
 #endif
 #else
-#ifdef linux
+#if defined(linux) || defined(__linux__)
 #if defined(__int8_t_defined) && 0 
 /* Becasue of yet more confusion, this tries to use the C99 standard type from stdint.h from inttypes.h */
 /* Even more confusiion as __int8_defined seesm to lie a little */
@@ -71,7 +71,7 @@ typedef int signal_code;
 #define NO_DEVICE 1
 /* #define E_PMEM_BASE 2 */
 
-#ifndef __LINUX__
+#if not defined (linux) && not defined(__linux__)
 #define PCI_IO_BASE 0
 #define PCI_MEM_BASE 0
 #endif
