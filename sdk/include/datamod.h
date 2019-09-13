@@ -64,7 +64,7 @@
  * W.I.H 27/1/2014 
  * Adding 2D module type, using top 16 bits of DISP type.
  */
-#if defined(USE_GTK) || defined(__LINUX__) || defined(linux)
+#if defined(USE_GTK) || defined(__LINUX__) || defined(linux) || defined (__linux__)
 #include "os9types.h"
 #include <sys/types.h>
 

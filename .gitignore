@@ -1,8 +1,6 @@
 *.o
 *.P
 *.d
-*.so
-*.so.*
 *~
 *.swp
 \#*\#
@@ -11,4 +9,5 @@
 html
 xspress3test
 Zr_mca15_pass0.d16
-
+build/
+tango/build/
