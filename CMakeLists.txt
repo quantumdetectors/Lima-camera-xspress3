@@ -64,7 +64,7 @@ if (("${LIB_IMGMOD}" STREQUAL "LIB_IMGMOD-NOTFOUND"))
   message(FATAL_ERROR "${NAME} : libimg_mod not found")
 endif()
 
-find_library(LIB_XSPRESS3 NAMES xspress3 img_mod
+find_library(LIB_XSPRESS3 NAMES xspress3
   PATHS "${CMAKE_CURRENT_SOURCE_DIR}/sdk/libs/linux.x86_64"
   NO_CMAKE_FIND_ROOT_PATH
   NO_DEFAULT_PATH
