@@ -60,10 +60,10 @@ Camera::Camera(int nbCards, int maxFrames, string baseIPaddress, int basePort, s
     m_card = -1;
     m_use_dtc = false;
     m_read_thread = new ReadThread(*this);
-    m_read_thread->start();
     m_clear_flag = true;
     m_exp_time = 0.0;
     init();
+    m_read_thread->start();
 }
 
 Camera::~Camera() {
